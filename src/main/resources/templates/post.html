@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Gate Of Heaven - Songs')}"></head>
+<body class="bg-light">
+
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+
+<main class="container my-5">
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Add New Song</h4>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Form bound to the 'song' object -->
+                        <form th:action="@{/save}" th:object="${song}" method="post" novalidate class="needs-validation">
+
+                            <!-- Title Field (Required) -->
+                            <div class="mb-3">
+                                <label for="title" class="form-label fw-bold">Song Title <span class="text-danger">*</span></label>
+                                <!-- th:field binds the input to song.title -->
+                                <input type="text"
+                                       id="title"
+                                       th:field="*{title}"
+                                       class="form-control"
+                                       th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''"
+                                       placeholder="Enter song title"
+                                       required>
+                                <!-- Server-side validation error message -->
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                                    Title is required.
+                                </div>
+                            </div>
+
+                            <!-- Lyrics Field (Required) -->
+                            <div class="mb-3">
+                                <label for="lyrics" class="form-label fw-bold">Lyrics <span class="text-danger">*</span></label>
+                                <textarea id="lyrics"
+                                          th:field="*{lyrics}"
+                                          class="form-control"
+                                          th:classappend="${#fields.hasErrors('lyrics')} ? 'is-invalid' : ''"
+                                          rows="6"
+                                          placeholder="Enter the lyrics here..."
+                                          required></textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('lyrics')}" th:errors="*{lyrics}">
+                                    Lyrics are required.
+                                </div>
+                            </div>
+
+                            <!-- Author Field (Optional) -->
+                            <div class="mb-4">
+                                <label for="author" class="form-label fw-bold">Author <span class="text-muted fw-normal">(Optional)</span></label>
+                                <input type="text"
+                                       id="author"
+                                       th:field="*{author}"
+                                       class="form-control"
+                                       placeholder="Enter author name">
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">Save Song</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Optional: Client-side Bootstrap validation script -->
+    <script>
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

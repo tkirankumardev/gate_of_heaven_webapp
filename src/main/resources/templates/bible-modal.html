@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Telugu Bible')}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="bg-light">
+
+<style>
+    #readingPane:fullscreen { background-color: white !important; overflow-y: auto !important; padding: 3rem 2rem !important; }
+    #readingPane:-webkit-full-screen { background-color: white !important; overflow-y: auto !important; padding: 3rem 2rem !important; }
+
+    .verse-text, .saved-verse-text { cursor: pointer; transition: color 0.2s; }
+    .verse-text:hover, .saved-verse-text:hover { color: #0d6efd; }
+
+    #singleVerseOverlay {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background-color: white; z-index: 1050; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; padding: 5%; text-align: center;
+        opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out;
+    }
+    #singleVerseOverlay.show-overlay { opacity: 1; pointer-events: auto; }
+
+    .close-overlay-btn { position: absolute; top: 2rem; right: 2rem; font-size: 2.5rem; cursor: pointer; color: #adb5bd; transition: color 0.2s; }
+    .close-overlay-btn:hover { color: #dc3545; }
+
+    .big-verse-text { font-size: clamp(2rem, 5vw, 4.5rem); font-family: 'Merriweather', serif; line-height: 1.4; color: #212529; }
+    .big-verse-ref { font-size: clamp(1rem, 2vw, 1.5rem); color: #6c757d; margin-top: 2rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+</style>
+
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+
+<main class="container my-5">
+
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-dark" style="font-family: 'Merriweather', serif;">Telugu Bible</h1>
+        <p class="text-muted">Search and read the Word of God</p>
+    </div>
+
+    <!-- BIBLE CONTROL PANEL -->
+    <div class="card border-0 shadow-sm rounded-4 mb-5 d-print-none p-4 p-md-5 bg-white">
+        <form th:action="@{/bible}" method="GET">
+            <div class="row g-4 align-items-end justify-content-center">
+                <div class="col-md-4 col-sm-6">
+                    <label for="bookSelect" class="form-label fw-semibold text-muted small">Select Book</label>
+                    <select class="form-select form-select-lg border-light bg-light custom-select" id="bookSelect" name="bookId" required>
+                        <option value="" disabled selected>Select a Book...</option>
+                        <option th:each="book : ${data}"
+                                th:value="${book.bookId}"
+                                th:text="${book.bookName}"
+                                th:data-max-chapters="${book.totalChapters}"
+                                th:selected="${param.bookId != null and param.bookId.toString() == book.bookId.toString()}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-6">
+                    <label for="chapterInput" class="form-label fw-semibold text-muted small">Chapter</label>
+                    <input type="text" class="form-control form-control-lg border-light bg-light text-center"
+                           id="chapterInput" name="chapter" placeholder="Select..."
+                           th:value="${param.chapter}" readonly style="cursor: pointer;" required>
+                </div>
+                <div class="col-md-2 col-sm-6">
+                    <label for="verseFrom" class="form-label fw-semibold text-muted small">Verse (From)</label>
+                    <input type="number" class="form-control form-control-lg border-light bg-light"
+                           id="verseFrom" name="verseFrom" min="1" placeholder="Optional" th:value="${param.verseFrom}">
+                </div>
+                <div class="col-md-2 col-sm-6">
+                    <label for="verseTo" class="form-label fw-semibold text-muted small">Verse (To)</label>
+                    <input type="number" class="form-control form-control-lg border-light bg-light"
+                           id="verseTo" name="verseTo" min="1" placeholder="Optional" th:value="${param.verseTo}">
+                </div>
+                <div class="col-md-2 col-sm-12">
+                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm">
+                        <i class="bi bi-book-half me-2"></i> Read
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- RESULTS SECTION -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4" id="readingPane" th:if="${verses != null}">
+        <div class="d-flex justify-content-between align-items-center mb-4 d-print-none">
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 shadow-sm" id="fullscreenBtn">
+                <i class="bi bi-arrows-fullscreen me-1"></i> <span>Full Screen</span>
+            </button>
+            <div class="d-flex align-items-center gap-2 bg-light p-2 rounded-pill">
+                <i class="bi bi-type text-muted small ms-2"></i>
+                <input type="range" class="form-range" id="fontSizeSlider" min="14" max="36" value="20" style="width: 130px;">
+                <i class="bi bi-type fs-5 text-muted me-2"></i>
+            </div>
+        </div>
+
+        <div id="versesContainer" style="font-size: 20px; line-height: 1.8; font-family: 'Merriweather', serif;">
+            <div th:if="${#lists.isEmpty(verses)}" class="text-center text-muted my-4">
+                No verses found for the selected range.
+            </div>
+            <p th:each="v : ${verses}" class="mb-3 verse-line position-relative pe-4">
+                <sup class="text-primary fw-bold me-1 fs-6" th:text="${v.verseNumber}">1</sup>
+                <span class="verse-text" th:text="${v.verse}" title="Click to view in Presentation Mode">Verse text...</span>
+                <button type="button" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm position-absolute end-0 top-0 add-verse-btn"
+                        th:data-verse-num="${v.verseNumber}" title="Save Verse">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            </p>
+        </div>
+    </div>
+
+    <!-- SAVED VERSES SECTION -->
+    <div id="savedVersesContainer" class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-5" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark m-0"><i class="bi bi-bookmark-star text-warning me-2"></i>Saved Verses</h5>
+            <button class="btn btn-sm btn-outline-danger rounded-pill" id="clearAllSavedBtn">Clear All</button>
+        </div>
+        <div id="savedVersesList" class="d-flex flex-column gap-3"></div>
+    </div>
+
+</main>
+
+<!-- SINGLE VERSE PRESENTATION OVERLAY -->
+<div id="singleVerseOverlay">
+    <i class="bi bi-x-lg close-overlay-btn" id="closeOverlayBtn" title="Close"></i>
+    <div class="big-verse-text" id="overlayVerseText"></div>
+    <div class="big-verse-ref" id="overlayVerseRef"></div>
+</div>
+
+<!-- CHAPTER SELECTION MODAL -->
+<div class="modal fade" id="chapterModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light border-bottom-0">
+                <button type="button" class="btn border-0 shadow-none p-0" data-bs-dismiss="modal"><i class="bi bi-arrow-left fs-4"></i></button>
+                <h6 class="modal-title fw-bold text-secondary mx-auto" style="letter-spacing: 1px;">CHAPTER</h6>
+                <button type="button" class="btn border-0 shadow-none p-0 text-muted small fw-semibold" data-bs-dismiss="modal">CANCEL</button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="chapterGridContainer" class="d-grid text-center" style="grid-template-columns: repeat(5, 1fr);"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}" class="d-print-none"></footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const bookSelect = document.getElementById("bookSelect");
+        const chapterInput = document.getElementById("chapterInput");
+        const versesContainer = document.getElementById('versesContainer');
+
+        // ==========================================
+        // SINGLE VERSE PRESENTATION LOGIC
+        // ==========================================
+        const singleVerseOverlay = document.getElementById('singleVerseOverlay');
+        const overlayVerseText = document.getElementById('overlayVerseText');
+        const overlayVerseRef = document.getElementById('overlayVerseRef');
+        const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+
+        function showPresentation(text, ref) {
+            overlayVerseText.textContent = text;
+            overlayVerseRef.textContent = ref;
+            singleVerseOverlay.classList.add('show-overlay');
+        }
+
+        function closePresentation() {
+            singleVerseOverlay.classList.remove('show-overlay');
+        }
+
+        if (closeOverlayBtn) closeOverlayBtn.addEventListener('click', closePresentation);
+
+        if (singleVerseOverlay) {
+            singleVerseOverlay.addEventListener('click', function(e) {
+                if (e.target === singleVerseOverlay) closePresentation();
+            });
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && singleVerseOverlay.classList.contains('show-overlay')) {
+                closePresentation();
+            }
+        });
+
+        // ==========================================
+        // VERSES CONTAINER CLICK HANDLER
+        // ==========================================
+        if (versesContainer) {
+            versesContainer.addEventListener('click', function(e) {
+                // 1. Check if text clicked for Presentation
+                const textSpan = e.target.closest('.verse-text');
+                if (textSpan && bookSelect && chapterInput) {
+                    const text = textSpan.textContent;
+                    const verseNum = textSpan.previousElementSibling.textContent;
+                    const bookName = bookSelect.options[bookSelect.selectedIndex].text;
+                    const chapterNum = chapterInput.value;
+                    showPresentation(text, `${bookName} ${chapterNum}:${verseNum}`);
+                    return;
+                }
+
+                // 2. Check if '+' button clicked to Save
+                const addBtn = e.target.closest('.add-verse-btn');
+                if (addBtn && bookSelect && chapterInput) {
+                    const verseNum = addBtn.getAttribute('data-verse-num');
+                    const verseText = addBtn.previousElementSibling.textContent;
+                    const bookName = bookSelect.options[bookSelect.selectedIndex].text;
+                    const chapterNum = chapterInput.value;
+                    const uniqueId = `${bookName}-${chapterNum}-${verseNum}`;
+
+                    const newVerseObj = { id: uniqueId, book: bookName, chapter: chapterNum, verseNum: verseNum, text: verseText };
+                    let saved = JSON.parse(sessionStorage.getItem('userSavedVerses')) || [];
+
+                    if (!saved.some(v => v.id === uniqueId)) {
+                        saved.push(newVerseObj);
+                        sessionStorage.setItem('userSavedVerses', JSON.stringify(saved));
+                        renderSavedVerses();
+
+                        const icon = addBtn.querySelector('i');
+                        icon.className = 'bi bi-check-lg text-success';
+                        setTimeout(() => { icon.className = 'bi bi-plus-lg'; }, 1500);
+                    }
+                }
+            });
+        }
+
+        // ==========================================
+        // SESSION STORAGE LOGIC (Saved Verses)
+        // ==========================================
+        const SESSION_KEY = 'userSavedVerses';
+        const savedContainer = document.getElementById('savedVersesContainer');
+        const savedList = document.getElementById('savedVersesList');
+
+        function renderSavedVerses() {
+            let saved = JSON.parse(sessionStorage.getItem(SESSION_KEY)) || [];
+            if (saved.length === 0) {
+                savedContainer.style.display = 'none';
+                return;
+            }
+            savedContainer.style.display = 'block';
+            savedList.innerHTML = '';
+
+            saved.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'p-3 bg-light rounded-3 border-start border-4 border-warning position-relative';
+
+                // Added data attributes to the reference and 'saved-verse-text' class to the text
+                div.innerHTML = `
+                    <div class="fw-bold text-primary mb-1 saved-verse-ref" data-book="${item.book}" data-chapter="${item.chapter}" data-verse="${item.verseNum}">
+                        ${item.book} ${item.chapter}:${item.verseNum}
+                    </div>
+                    <div class="saved-verse-text" style="font-family: 'Merriweather', serif; padding-right: 30px;" title="Click to view in Presentation Mode">
+                        ${item.text}
+                    </div>
+                    <button class="btn btn-sm btn-link text-danger position-absolute top-0 end-0 m-2 remove-verse-btn" data-id="${item.id}" title="Remove">
+                        <i class="bi bi-trash3-fill"></i>
+                    </button>
+                `;
+                savedList.appendChild(div);
+            });
+        }
+
+        if (savedList) {
+            savedList.addEventListener('click', function(e) {
+                // 1. Remove button logic
+                const removeBtn = e.target.closest('.remove-verse-btn');
+                if (removeBtn) {
+                    const idToRemove = removeBtn.getAttribute('data-id');
+                    let saved = JSON.parse(sessionStorage.getItem(SESSION_KEY)) || [];
+                    saved = saved.filter(v => v.id !== idToRemove);
+                    sessionStorage.setItem(SESSION_KEY, JSON.stringify(saved));
+                    renderSavedVerses();
+                    return;
+                }
+
+                // 2. Presentation Mode for Saved Verses
+                const textDiv = e.target.closest('.saved-verse-text');
+                if (textDiv) {
+                    const text = textDiv.textContent.trim();
+                    const refDiv = textDiv.previousElementSibling;
+                    const bookName = refDiv.getAttribute('data-book');
+                    const chapterNum = refDiv.getAttribute('data-chapter');
+                    const verseNum = refDiv.getAttribute('data-verse');
+
+                    showPresentation(text, `${bookName} ${chapterNum}:${verseNum}`);
+                }
+            });
+        }
+
+        const clearBtn = document.getElementById('clearAllSavedBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                if(confirm("Are you sure you want to clear all saved verses?")) {
+                    sessionStorage.removeItem(SESSION_KEY);
+                    renderSavedVerses();
+                }
+            });
+        }
+
+        renderSavedVerses();
+
+        // ==========================================
+        // FULL SCREEN LOGIC (Main Reading Pane)
+        // ==========================================
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const readingPane = document.getElementById('readingPane');
+        if (fullscreenBtn && readingPane) {
+            fullscreenBtn.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    readingPane.requestFullscreen().catch(err => console.error(err));
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+            document.addEventListener('fullscreenchange', () => {
+                const btnIcon = fullscreenBtn.querySelector('i');
+                const btnText = fullscreenBtn.querySelector('span');
+                if (document.fullscreenElement) {
+                    btnIcon.className = 'bi bi-fullscreen-exit me-1';
+                    btnText.textContent = 'Exit Full Screen';
+                } else {
+                    btnIcon.className = 'bi bi-arrows-fullscreen me-1';
+                    btnText.textContent = 'Full Screen';
+                }
+            });
+        }
+
+        // ==========================================
+        // FONT SIZE LOGIC
+        // ==========================================
+        const slider = document.getElementById('fontSizeSlider');
+        if(slider && versesContainer) {
+            slider.addEventListener('input', function() {
+                versesContainer.style.fontSize = this.value + 'px';
+            });
+        }
+
+        // ==========================================
+        // DYNAMIC CHAPTER MODAL LOGIC
+        // ==========================================
+        const chapterModalElement = document.getElementById("chapterModal");
+        if (chapterModalElement) {
+            const chapterModal = new bootstrap.Modal(chapterModalElement);
+            const gridContainer = document.getElementById("chapterGridContainer");
+            let currentMaxChapters = 0;
+
+            if (bookSelect && bookSelect.selectedIndex > 0) {
+                currentMaxChapters = parseInt(bookSelect.options[bookSelect.selectedIndex].getAttribute("data-max-chapters")) || 0;
+            }
+
+            function populateChapterGrid(maxChapters) {
+                gridContainer.innerHTML = "";
+                for (let i = 1; i <= maxChapters; i++) {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "btn btn-light border-bottom border-end rounded-0 py-3";
+                    btn.textContent = i;
+                    if (chapterInput.value == i) {
+                        btn.classList.remove("btn-light");
+                        btn.classList.add("btn-primary", "text-white");
+                    }
+                    btn.onclick = function() {
+                        chapterInput.value = i;
+                        chapterModal.hide();
+                        document.getElementById("verseFrom").focus();
+                    };
+                    gridContainer.appendChild(btn);
+                }
+            }
+
+            if (bookSelect) {
+                bookSelect.addEventListener("change", function() {
+                    currentMaxChapters = parseInt(bookSelect.options[bookSelect.selectedIndex].getAttribute("data-max-chapters")) || 0;
+                    chapterInput.value = "";
+                    document.getElementById("verseFrom").value = "";
+                    document.getElementById("verseTo").value = "";
+                    if (currentMaxChapters > 0) {
+                        populateChapterGrid(currentMaxChapters);
+                        chapterModal.show();
+                    }
+                });
+            }
+
+            if (chapterInput) {
+                chapterInput.addEventListener("click", function() {
+                    if (!currentMaxChapters || currentMaxChapters === 0) {
+                        alert("Please select a Book first.");
+                        bookSelect.focus();
+                        return;
+                    }
+                    populateChapterGrid(currentMaxChapters);
+                    chapterModal.show();
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head th:replace="~{fragments/head :: head('Gate Of Heaven')}"></head>
+<body>
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">Loving God, Loving People <br><span>Preaching God In Valley's</span></h1>
+
+            <div class="hero-button">
+                <a href="/songs" class="btn">Worship Lyrics</a>
+                <!-- Using anchor links to scroll down -->
+                <a href="#about" class="btn">About Our Ministries</a>
+                <a href="#gallery" class="btn">Our Gallery</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section id="about" class="about-section py-5">
+    <div class="container my-5">
+        <div class="row align-items-center">
+            <!-- Text Content -->
+            <div class="col-lg-6 mb-4 mb-lg-0 pe-lg-5">
+                <h2 class="section-title mb-4">About Our Ministries</h2>
+                <h4 class="text-muted fw-light mb-4">Bringing light and hope to every corner of the valley.</h4>
+                <p class="text-secondary mb-3">
+                    We are a community dedicated to loving God and serving people. Our mission is to reach out with the message of grace, providing a welcoming home for worship, spiritual growth, and fellowship.
+                </p>
+                <p class="text-secondary mb-4">
+                    Whether you are looking for a place to belong, uplifting worship through our song collections, or a community that supports each other through prayer, the Gate of Heaven is open to you.
+                </p>
+                <a href="#" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm">Learn More</a>
+            </div>
+            <!-- Image Content -->
+            <div class="col-lg-6">
+                <div class="about-image-wrapper position-relative">
+                    <!-- Replace with your actual image -->
+                    <img src="../images/arku.jpg" alt="Worship in the Valley" class="img-fluid rounded-4 shadow-lg w-100 object-fit-cover" style="height: 400px;">
+                    <!-- Optional floating card for extra design flair -->
+                    <div class="floating-card bg-white p-3 rounded-3 shadow text-center position-absolute bottom-0 start-0 translate-middle-x ms-5 mb-4 d-none d-md-block">
+                        <h3 class="text-primary mb-0">10+</h3>
+                        <span class="text-muted small fw-bold">Years of Grace</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GALLERY SECTION -->
+<section id="gallery" class="gallery-section py-5 bg-light">
+    <div class="container my-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title centered mx-auto mb-3">Our Journey in Pictures</h2>
+            <p class="text-muted">Glimpses of our worship, gatherings, and community outreach.</p>
+        </div>
+
+        <!-- Gallery Filter Tabs (Pills) -->
+        <ul class="nav nav-pills custom-pills justify-content-center mb-5" id="galleryTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active rounded-pill px-4" id="events-tab" data-bs-toggle="pill" data-bs-target="#events-pane" type="button" role="tab" aria-controls="events-pane" aria-selected="true">
+                    Events
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill px-4" id="preachings-tab" data-bs-toggle="pill" data-bs-target="#preachings-pane" type="button" role="tab" aria-controls="preachings-pane" aria-selected="false">
+                    Preachings
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill px-4" id="donations-tab" data-bs-toggle="pill" data-bs-target="#donations-pane" type="button" role="tab" aria-controls="donations-pane" aria-selected="false">
+                    Charity & Donations
+                </button>
+            </li>
+        </ul>
+
+        <!-- Gallery Tab Content -->
+        <div class="tab-content" id="galleryTabsContent">
+
+            <div class="tab-pane fade show active" id="events-pane" role="tabpanel" aria-labelledby="events-tab">
+                <div class="row g-4">
+                    <div class="col-12 col-sm-6 col-md-4" th:each="img : ${events}">
+                        <div class="gallery-item rounded-4 overflow-hidden shadow-sm">
+                            <img th:src="${img.preSignedUrl}" alt="Gate of Heaven" class="img-fluid">
+                            <div class="gallery-overlay d-flex align-items-end p-3">
+                                <h5 class="text-white mb-0 fw-bold" th:text="${img.metaData}"></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <a th:href="@{/gallery/EVENTS}" class="btn btn-outline-primary rounded-pill px-4 py-2">View All</a>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="preachings-pane" role="tabpanel" aria-labelledby="preachings-tab">
+                <div class="row g-4">
+                    <div class="col-12 col-sm-6 col-md-4" th:each="img : ${preachings}">
+                        <div class="gallery-item rounded-4 overflow-hidden shadow-sm">
+                            <img th:src="${img.preSignedUrl}" alt="Gate of Heaven" class="img-fluid">
+                            <div class="gallery-overlay d-flex align-items-end p-3">
+                                <h5 class="text-white mb-0 fw-bold" th:text="${img.metaData}"></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <a th:href="@{/gallery/PREACHINGS}" class="btn btn-outline-primary rounded-pill px-4 py-2">View All</a>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="donations-pane" role="tabpanel" aria-labelledby="donations-tab">
+                <div class="row g-4">
+                    <div class="col-12 col-sm-6 col-md-4" th:each="img : ${charity}">
+                        <div class="gallery-item rounded-4 overflow-hidden shadow-sm">
+                            <img th:src="${img.preSignedUrl}" alt="Gate of Heaven" class="img-fluid">
+                            <div class="gallery-overlay d-flex align-items-end p-3">
+                                <h5 class="text-white mb-0 fw-bold" th:text="${img.metaData}"></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <a th:href="@{/gallery/CHARITY}" class="btn btn-outline-primary rounded-pill px-4 py-2">View All</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

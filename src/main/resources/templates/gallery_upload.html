@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Gate Of Heaven - Songs')}"></head>
+<body class="bg-light">
+
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+
+<main class="container my-5">
+    <div th:if="${errors}" class="alert alert-danger" role="alert">
+        <span th:text="${errors}"></span>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}"></span>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Gallery</h4>
+                </div>
+                <div class="card-body">
+
+                    <form th:action="@{/gallery_upload}" th:object="${gallery}" method="post" enctype="multipart/form-data" novalidate class="needs-validation">
+
+                        <div class="mb-3">
+                            <label for="category" class="form-label fw-bold">Category <span class="text-danger">*</span></label>
+                            <select id="category"
+                                    th:field="*{category}"
+                                    class="form-select"
+                                    th:classappend="${#fields.hasErrors('category')} ? 'is-invalid' : ''"
+                                    required>
+                                <option value="" disabled selected>Select a category...</option>
+                                <option th:each="cat : ${activity}"
+                                        th:value="${cat}"
+                                        th:text="${cat}">Category Name</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="metaData" class="form-label fw-bold">Meta Data <span class="text-danger">*</span></label>
+                            <input type="text"
+                                   id="metaData"
+                                   th:field="*{metaData}"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('metaData')} ? 'is-invalid' : ''"
+                                   placeholder="Enter event metadata">
+                            <div th:if="${#fields.hasErrors('metaData')}" th:errors="*{metaData}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="file" class="form-label fw-bold">Gallery Image <span class="text-danger">*</span></label>
+                            <input type="file"
+                                   id="file"
+                                   name="file"
+                                   class="form-control"
+                                   accept="image/*, .mp4, .gp3">
+                            <div class="invalid-feedback">
+                                Please select an image file to upload.
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="date" class="form-label fw-bold">Date <span class="text-muted fw-normal">(Defaults to today)</span></label>
+                            <input type="date"
+                                   id="date"
+                                   th:field="*{date}"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('date')} ? 'is-invalid' : ''">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Upload Image</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

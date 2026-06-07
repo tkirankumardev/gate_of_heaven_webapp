@@ -1,0 +1,71 @@
+<footer th:fragment="footer" class="elegant-footer">
+    <!-- Gradient top border -->
+    <div class="footer-top-border"></div>
+
+    <div class="container py-5">
+        <div class="row gy-5">
+
+            <!-- Brand & Contact -->
+            <div class="col-lg-4 col-md-6 pe-lg-5">
+                <h3 class="fw-bold mb-4">Gate Of Heaven</h3>
+                <p class="footer-text mb-4">
+                    Loving God, Loving People. Preaching God in the valleys. A community dedicated to grace, worship, and fellowship.
+                </p>
+                <ul class="list-unstyled footer-contact">
+                    <li><i class="bi bi-geo-alt-fill text-accent"></i> 8th Lane, Ashok Nagar, Bc Road, New Gajuwaka, Visakhapatnam, 530026</li>
+                    <li><i class="bi bi-envelope-fill text-accent"></i> gateofheaven@gmail.com</li>
+                    <li><i class="bi bi-telephone-fill text-accent"></i> +91 xxxxx xxxxx</li>
+                </ul>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-3 col-md-6">
+                <h5 class="fw-bold mb-4">Quick Links</h5>
+                <ul class="list-unstyled d-flex flex-column gap-3">
+                    <li><a href="/home" class="footer-link">Home</a></li>
+                    <li><a href="/index#about" class="footer-link">About Our Ministries</a></li>
+                    <li><a href="/songs" class="footer-link">Worship Lyrics</a></li>
+                    <li><a href="/index#gallery" class="footer-link">Our Gallery</a></li>
+                    <li><a href="/terms" class="footer-link">Terms, Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Service Times -->
+            <div class="col-lg-5 col-md-12">
+                <h5 class="fw-bold mb-4">Service Times</h5>
+                <div class="service-card p-4 rounded-4 mb-4">
+                    <div class="d-flex justify-content-between border-bottom border-light pb-2 mb-2">
+                        <span class="text-white fw-semibold">Sunday Worship</span>
+                        <span class="text-accent fw-bold">9:00 AM - 11:00 AM</span>
+                    </div>
+                    <div class="d-flex justify-content-between pb-2 mb-2">
+                        <span class="text-white fw-semibold">Friday Fasting Prayer</span>
+                        <span class="text-accent fw-bold">7:00 PM - 10:00 PM</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-white fw-semibold">Saturday All Night Prayer</span>
+                        <span class="text-accent fw-bold">9:00 PM - 1:00 AM</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom py-3">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <p class="mb-0 footer-text small">
+                &copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span> Gate Of Heaven. All rights reserved.
+            </p>
+
+            <!-- Glassmorphism Social Icons -->
+            <div class="d-flex gap-3">
+                <a href="#" class="glass-social" title="Facebook"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="glass-social" title="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="glass-social" title="YouTube"><i class="bi bi-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</footer>

@@ -1,0 +1,759 @@
+//==========================
+// Variables
+//==========================
+$primary: #4f46e5;        // Elegant indigo
+$primary-dark: #312e81;
+$accent: #0ea5e9;         // Sky blue for gradients
+$text-main: #1e293b;
+$text-muted: #64748b;
+$bg-light: #f8fafc;
+$white: #ffffff;
+
+
+$primary-color: #0d6efd;
+$danger-color: #dc3545;
+$text-dark: #212529;
+$bg-white: #ffffff;
+$overlay-z-index: 1050;
+
+$merriweather-font: "Merriweather", serif;
+$Noto: "Noto Sans Telugu", sans-serif;
+
+// Shadows
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+$hamburger-color: #1e293b; // Dark slate color
+
+html {
+  scroll-behavior: smooth;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  background-color: $bg-light;
+  color: $text-main;
+}
+
+a{
+  text-decoration: none;
+}
+
+.form-control:focus {
+  border-color: inherit;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  outline: none;
+}
+
+//===============================
+//  ----------- Navbar Started -------------------
+//===============================
+
+// --- Custom Animated Hamburger Icon ---
+.navbar-toggler {
+  /* Remove the default focus box shadow for a cleaner look */
+  box-shadow: none !important;
+
+  /* ANIMATION STATE: When the menu is open */
+  &[aria-expanded="true"] {
+    .animated-icon {
+      span {
+        &:nth-child(1) {
+          top: 8px;
+          transform: rotate(135deg);
+        }
+
+        &:nth-child(2) {
+          opacity: 0;
+          left: -20px; // Slides slightly left as it fades out
+        }
+
+        &:nth-child(3) {
+          top: 8px;
+          transform: rotate(-135deg);
+        }
+      }
+    }
+  }
+}
+
+.animated-icon {
+  width: 28px;
+  height: 20px;
+  position: relative;
+  margin: 0;
+  transform: rotate(0deg);
+  transition: 0.5s ease-in-out;
+  cursor: pointer;
+
+  /* Base styles for the three lines */
+  span {
+    display: block;
+    position: absolute;
+    height: 3px;
+    width: 100%;
+    background: $hamburger-color;
+    border-radius: 9px;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: 0.25s ease-in-out;
+
+    /* Positioning the three lines */
+    &:nth-child(1) {
+      top: 0px;
+    }
+
+    &:nth-child(2) {
+      top: 8px;
+    }
+
+    &:nth-child(3) {
+      top: 16px;
+    }
+  }
+}
+//===============================
+//  ----------- Navbar Ended Here -------------------
+//===============================
+
+
+
+
+//===============================
+//  ----------- Hero Started -------------------
+//===============================
+.hero {
+  width: 100%;
+  height: 100vh;
+  // Use a slightly darker gradient for better text readability
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(../images/arku.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+  .hero-body {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .container {
+      text-align: center;
+      width: 100%;
+      max-width: 1200px;
+      padding: 0 20px;
+
+      h1 {
+        color: white;
+        font-family: $merriweather-font;
+        letter-spacing: 2px;
+        font-size: 3.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+
+        span {
+          font-size: 2.5rem;
+          font-weight: 400;
+          opacity: 0.9;
+        }
+
+        // Make text responsive on mobile
+        @media (max-width: 768px) {
+          font-size: 2.5rem;
+          span { font-size: 1.5rem; }
+        }
+      }
+
+      .hero-button {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 15px; // Better spacing for buttons
+        margin-top: 30px;
+
+        a {
+          color: white;
+          border: 2px solid rgba(255, 255, 255, 0.8);
+          border-radius: 2rem;
+          padding: 12px 24px;
+          text-decoration: none;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          backdrop-filter: blur(5px); // Cool glass effect
+
+          @media (hover: hover) and (pointer: fine) {
+            &:hover {
+              background: white;
+              color: #000;
+              transform: translateY(-2px);
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// --- SECTION TITLES ---
+.section-title {
+  font-family: $merriweather-font;
+  font-weight: 700;
+  color: #1e293b;
+  position: relative;
+  padding-bottom: 15px;
+
+  // Adds a stylish colored underline to headers
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: $primary;
+    border-radius: 2px;
+  }
+
+  // Centers the underline if the text is centered
+  &.centered::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+// --- GALLERY NAV PILLS ---
+.custom-pills {
+  gap: 10px;
+
+  .nav-link {
+    color: $text-main;
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: rgba($primary, 0.1);
+        color: $primary;
+      }
+    }
+
+    &.active {
+      background-color: $primary;
+      color: $white;
+      box-shadow: $shadow-md;
+    }
+  }
+}
+
+// --- GALLERY SECTION & OVERLAYS ---
+.gallery-section {
+  .gallery-item {
+    position: relative;
+    cursor: pointer;
+
+    // Set a hard height so every box is identical
+    height: 280px;
+    width: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // Crucial: prevents aspect ratio distortion
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    // Gradient overlay so white text is always readable
+    .gallery-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%);
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+
+      h5 {
+        transform: translateY(10px);
+        transition: transform 0.3s ease;
+      }
+    }
+
+    // Hover Animation
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        img {
+          transform: scale(1.08);
+        }
+        .gallery-overlay {
+          opacity: 1;
+
+          h5 {
+            transform: translateY(0); // Text slides up slightly on hover
+          }
+        }
+      }
+    }
+  }
+}
+
+//===============================
+//  ----------- Hero Ended Here -------------------
+//===============================
+
+
+
+//===============================
+//  ----------- song list Started -------------------
+//===============================
+
+.nav-tabs.custom-tabs {
+  border-bottom: 2px solid #e2e8f0;
+
+  .nav-link {
+    color: $text-muted;
+    border: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: $primary;
+      }
+    }
+
+    &.active {
+      color: $primary;
+      font-weight: 700;
+      border-bottom-color: $primary;
+      background-color: transparent;
+    }
+  }
+}
+
+// --- Sticky Alphabetical Index (Glassmorphism) ---
+.index-container {
+  background: rgba($white, 0.75);
+  backdrop-filter: blur(12px); // Glass effect
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: $shadow-md;
+  border-radius: 1rem;
+  top: 15px; // spacing for sticky top
+  z-index: 90;
+}
+
+.index-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  margin: 0.25rem;
+  background-color: $white;
+  color: $primary;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: $shadow-sm;
+  font-family: $Noto;
+
+  // Hover ONLY applies on non-touch devices
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: linear-gradient(135deg, $primary, $accent);
+      color: $white;
+      transform: translateY(-3px);
+      box-shadow: $shadow-md;
+    }
+  }
+
+  // Active state for mobile tapping
+  &:active {
+    transform: scale(0.92);
+    background: $primary;
+    color: $white;
+  }
+}
+
+// --- Song Cards & Links ---
+.song-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  border: none;
+  box-shadow: $shadow-sm;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-family: $Noto;
+
+
+  .card-header {
+    background: linear-gradient(135deg, $primary, $primary-dark);
+    color: $white;
+    border-bottom: none;
+  }
+
+  &.english-card .card-header {
+    background: linear-gradient(135deg, #0f172a, #334155); // Slate dark gradient
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  .list-group-item {
+    border-color: rgba(0, 0, 0, 0.04);
+    transition: background-color 0.2s ease;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: rgba($primary, 0.03);
+      }
+    }
+  }
+}
+
+.song-link {
+  color: $text-main;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: block;
+  font-weight: 500;
+  font-family: $Noto;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: $primary;
+      padding-left: 6px; // Subtle slide right on hover
+    }
+  }
+}
+
+// --- Back to Top Button ---
+#backToTopBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, $primary, $accent);
+  color: $white;
+  border-radius: 50%;
+  box-shadow: $shadow-md;
+  transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+
+//===============================
+//  ----------- song list Ended -------------------
+//===============================
+
+
+//===============================
+//  ----------- Song Started               -------------------
+//===============================
+
+// --- SONG PAGE & TOOLBAR STYLES ---
+.song-header {
+  .song-title {
+    font-family: $merriweather-font;
+    letter-spacing: -0.5px;
+  }
+}
+.lyrics-container {
+  .lyrics-text {
+    line-height: 2;
+    font-weight: 400;
+  }
+}
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.1);
+  background-color: $white;
+  color: $text-muted;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  i {
+    font-size: 1.1rem;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: $primary;
+      border-color: $primary;
+      color: $white;
+      transform: translateY(-2px);
+      box-shadow: $shadow-sm;
+    }
+  }
+  &:active {
+    transform: scale(0.95);
+  }
+}
+// Smooth transitions for the range slider
+.form-range {
+  &::-webkit-slider-thumb {
+    background-color: $primary;
+  }
+  &::-moz-range-thumb {
+    background-color: $primary;
+  }
+}
+// Focus outline removal for slider
+input[type=range]:focus {
+  outline: none;
+  box-shadow: none;
+}
+//===============================
+//  ----------- Song Ended Here               -------------------
+//===============================
+
+
+
+//===============================
+//  ----------- Bible Modal                -------------------
+//===============================
+// Full Screen Mode for Reading Pane
+#readingPane {
+  &:fullscreen,
+  &:-webkit-full-screen {
+    background-color: $bg-white !important;
+    overflow-y: auto !important;
+    padding: 3rem 2rem !important;
+  }
+}
+
+// Verse Text Hover Effect (Applied to both reading pane and saved verses)
+.verse-text, .saved-verse-text {
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+// Single Verse Presentation Overlay
+#singleVerseOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $bg-white;
+  z-index: $overlay-z-index;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+
+  &.show-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .close-overlay-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 2.5rem;
+    cursor: pointer;
+    color: #adb5bd;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $danger-color;
+    }
+  }
+
+  .big-verse-text {
+    font-size: clamp(2rem, 5vw, 4.5rem); // Responsive huge font
+    font-family: 'Merriweather', serif;
+    line-height: 1.4;
+    color: $text-dark;
+  }
+
+  .big-verse-ref {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: $text-muted;
+    margin-top: 2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+}
+
+//===============================
+//  ----------- Bible Modal Ended              -------------------
+//===============================
+
+
+
+
+
+//===============================
+//  ----------- Footer Started -------------------
+//===============================
+.elegant-footer {
+  // Uses your variable, but hardcodes the darker shade (#1e1b4b) to avoid the darken() function crashing
+  background: linear-gradient(135deg, #1e1b4b, $primary-dark) !important;
+  color: #cbd5e1; // Slate-300 hex instead of rgba
+  position: relative;
+  margin-top: 5rem;
+
+  // Apply your custom font to the footer headings
+  h3, h5 {
+    font-family: $merriweather-font;
+    color: #ffffff !important;
+  }
+
+  // A sleek gradient line at the very top of the footer
+  .footer-top-border {
+    height: 4px;
+    width: 100%;
+    background: linear-gradient(90deg, $primary, $accent);
+  }
+
+  // Text formatting
+  .footer-text {
+    line-height: 1.7;
+    font-size: 0.95rem;
+    color: #cbd5e1;
+  }
+
+  // Accent color helper
+  .text-accent {
+    color: $accent !important;
+  }
+
+  // Contact List
+  .footer-contact {
+    li {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: #e2e8f0;
+
+      i {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  // Footer Links with Hover Animation
+  .footer-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: $accent !important; // Highlights using your sky blue
+        transform: translateX(8px); // Slides right
+      }
+    }
+  }
+
+  // Service Times Card (Glassmorphism inspired)
+  .service-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+
+    .border-light {
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    // Force white text inside the card overriding bootstrap
+    span.text-white {
+      color: #ffffff !important;
+    }
+  }
+
+  // Footer Bottom Section
+  .footer-bottom {
+    background: rgba(0, 0, 0, 0.25); // Slightly darker bar at the very bottom
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  // Glassmorphism Social Icons
+  .glass-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background: linear-gradient(135deg, $primary, $accent);
+        border-color: transparent;
+        transform: translateY(-3px);
+        box-shadow: $shadow-md;
+      }
+    }
+
+    &:active {
+      transform: scale(0.9);
+      background: $primary;
+    }
+  }
+}
+// ===============================
+//  ----------- Footer Ended -------------------
+//===============================
+

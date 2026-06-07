@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head th:replace="~{fragments/head :: head('Gate Of Heaven')}"></head>
+<body class="bg-light">
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+<main class="container my-5">
+
+    <!-- Search Bar Section -->
+    <div class="row justify-content-center mb-5 d-print-none">
+        <div class="col-lg-8">
+            <form action="/search" method="get" class="search-form">
+                <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden bg-white border border-light">
+                    <input type="text" name="query" class="form-control border-0 px-4 bg-transparent" placeholder="Search for more lyrics..." aria-label="Search">
+                    <button class="btn btn-primary px-4 border-0" type="submit" title="Search">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row gy-5">
+        <!-- LEFT COLUMN: Song Details & Lyrics -->
+        <div class="col-lg-8">
+
+            <!-- Song Header (Hidden elements if null/empty) -->
+            <div class="song-header mb-3">
+                <h1 class="song-title fw-bold text-dark mb-2" th:text="${song.get().title}"></h1>
+
+                <!-- Only shows if transliteration is NOT null and NOT empty -->
+                <h4 class="song-transliteration text-muted fw-light mb-4"
+                    th:if="${!#strings.isEmpty(song.get().transliteration)}"
+                    th:text="${song.get().transliteration}"></h4>
+
+                <div class="d-flex flex-wrap gap-4 text-secondary small mb-3">
+                    <!-- Only shows if author is NOT null and NOT empty -->
+                    <span class="d-flex align-items-center gap-2" th:if="${!#strings.isEmpty(song.get().author)}">
+                            <i class="bi bi-person-circle text-primary"></i>
+                            <span th:text="${song.get().author}"></span>
+                        </span>
+
+                    <!-- Only shows if createdDate is NOT null -->
+                    <span class="d-flex align-items-center gap-2" th:if="${song.get().createdDate != null}">
+                            <i class="bi bi-calendar-event text-primary"></i>
+                            <span th:text="${#temporals.format(song.get().createdDate, 'dd MMM yyyy')}"></span>
+                        </span>
+                </div>
+            </div>
+
+            <!-- FULLSCREEN WRAPPER: Contains both Toolbar and Lyrics -->
+            <div id="fullscreenWrapper" class="rounded">
+
+                <!-- Sleek Toolbar -->
+                <div class="lyrics-toolbar d-flex align-items-center flex-wrap gap-3 py-3 border-top border-bottom mb-4 d-print-none">
+
+                    <button class="icon-btn" onclick="shareSong()" title="Share">
+                        <i class="bi bi-share-fill"></i>
+                    </button>
+                    <button class="icon-btn" onclick="window.print()" title="Save PDF">
+                        <i class="bi bi-file-earmark-pdf-fill"></i>
+                    </button>
+                    <button class="icon-btn" onclick="toggleFullScreen()" title="Full Screen">
+                        <i id="fullscreenIcon" class="bi bi-arrows-fullscreen"></i>
+                    </button>
+
+                    <!-- Font Size Slider -->
+                    <div class="d-flex align-items-center gap-2 ms-auto">
+                        <i class="bi bi-type text-muted fs-6" title="Decrease Font"></i>
+                        <input type="range" class="form-range" id="fontSizeSlider" min="14" max="50" value="20" style="width: 120px;">
+                        <i class="bi bi-type text-muted fs-4" title="Increase Font"></i>
+                    </div>
+                </div>
+                <!-- Lyrics Content -->
+                <div class="lyrics-container">
+                    <div class="lyrics-text text-dark" id="lyricsText" style="white-space: pre-wrap; font-size: 20px;" th:text="${song.get().lyrics}"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Sidebar (Recent Uploads) -->
+        <div class="col-lg-4 d-print-none">
+            <div class="sidebar-widget bg-white p-4 rounded-4 shadow-sm sticky-top" style="top: 100px;">
+                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                    <i class="bi bi-clock-history text-primary"></i> Recent Uploads
+                </h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item px-0 py-3 border-light" th:each="upload : ${last_uploads}">
+                        <a th:href="@{/song/{id}(id=${upload.id})}" class="recent-link text-decoration-none fw-medium text-dark d-block">
+                            <i class="bi bi-music-note me-2 text-muted"></i>
+                            <span th:text="${upload.title}"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="/scripts/song.js"></script>
+<footer th:replace="~{fragments/footer :: footer}" class="d-print-none"></footer>
+
+</body>
+</html>

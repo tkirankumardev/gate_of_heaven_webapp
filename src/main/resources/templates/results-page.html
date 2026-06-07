@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Gate Of Heaven - Songs')}"></head>
+<body class="bg-light">
+
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+
+<main class="container my-5">
+    <div class="row justify-content-center gap-lg-4">
+        <div class="col-12 col-lg-7 mb-5 mb-lg-0">
+            <div class="mb-4">
+                <h2 class="h5 fw-bold text-dark mb-1">Search Results</h2>
+                <p class="text-muted mb-0">
+                    Found <strong th:text="${#lists.size(results)}">0</strong> result(s).
+                </p>
+            </div>
+            <div class="card border-0 shadow-sm rounded-4">
+                <div th:if="${#lists.isEmpty(results)}" class="p-5 text-center text-muted">
+                    No songs found. Please try a different search.
+                </div>
+                <ul th:unless="${#lists.isEmpty(results)}" class="list-group list-group-flush rounded-4 overflow-hidden">
+                    <li class="list-group-item p-3 list-group-item-action" th:each="result : ${results}">
+                        <a th:href="@{/song/{id}(id=${result.id})}" class="text-decoration-none d-block text-dark">
+                            <strong th:text="${result.title}">Song Title</strong>
+                            <span class="text-muted mx-2">|</span>
+                            <span class="text-muted" th:text="${result.transliteration}">Transliteration</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 d-print-none">
+            <div class="sidebar-widget bg-white p-4 rounded-4 shadow-sm sticky-top" style="top: 100px;">
+                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                    <i class="bi bi-clock-history text-primary"></i> Recent Uploads
+                </h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item px-0 py-3 border-light" th:each="upload : ${last_uploads}">
+                        <a th:href="@{/song/{id}(id=${upload.id})}" class="recent-link text-decoration-none fw-medium text-dark d-block">
+                            <i class="bi bi-music-note me-2 text-muted"></i>
+                            <span th:text="${upload.title}"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>

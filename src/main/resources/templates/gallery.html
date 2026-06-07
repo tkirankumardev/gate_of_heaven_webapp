@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head th:replace="~{fragments/head :: head('Gate Of Heaven')}"></head>
+<body class="bg-light">
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+
+    <main class="container my-5">
+        <section th:each="catEntry : ${gallery}">
+            <h2 th:text="${catEntry.key}" class="text-center"></h2>
+
+            <section th:each="metaEntry : ${catEntry.value}">
+                <h3 th:text="${metaEntry.key}"></h3>
+
+                <div class="">
+                    <div th:each="gallery : ${metaEntry.value}" class="d-flex flex-wrap align-items-center flex-column flex-md-row">
+                        <img th:src="${gallery.preSignedUrl}" class="p-2 m-2 border shadow-sm" alt="Gallery Image"/>
+                    </div>
+                </div>
+
+            </section>
+        </section>
+    </main>
+
+
+<script src="/scripts/song.js"></script>
+<footer th:replace="~{fragments/footer :: footer}" class="d-print-none"></footer>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head th:replace="~{fragments/head :: head('Gate Of Heaven')}"></head>
+<body>
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5">
+            <!-- Card container with a soft shadow and subtle border -->
+            <div class="card shadow-sm border border-light-subtle rounded-4 overflow-hidden">
+
+                <!-- Decorative top bar indicating an update or notice -->
+                <div class="bg-primary-subtle py-2 px-4 border-bottom border-primary-subtle">
+                    <span class="text-primary-emphasis small fw-semibold tracking-wide uppercase">
+                        <i class="bi bi-info-circle-fill me-2"></i> System Notification
+                    </span>
+                </div>
+
+                <!-- Main Content Body -->
+                <div class="card-body p-4 text-center">
+
+                    <!-- Dynamic Message text with clean typography -->
+                    <h5 class="card-title text-dark fw-semibold mb-2" th:text="${message}">
+                        Action processed successfully.
+                    </h5>
+
+                    <!-- Dynamic Code identifier styled like a small badge -->
+                    <div class="mb-4">
+                        <span class="badge bg-secondary-subtle text-secondary-emphasis font-monospace px-2 py-1.5 rounded"
+                              th:text="${code}">
+                            CODE_200
+                        </span>
+                    </div>
+
+                    <!-- Action Button to guide the user back -->
+                    <div class="d-grid pt-2">
+                        <a href="/songs-list" class="btn btn-primary rounded-3 fw-medium py-2 shadow-sm">
+                            Continue to Songs List
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

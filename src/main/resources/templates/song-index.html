@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <head th:replace="~{fragments/head :: head('Gate Of Heaven')}"></head>
+</head>
+<body>
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+
+<main class="container my-5">
+
+    <!-- Custom Modern Nav Tabs -->
+    <ul class="nav nav-tabs custom-tabs nav-fill mb-4 bg-white rounded shadow-sm" id="songTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active text-uppercase py-3" id="telugu-tab" data-bs-toggle="tab" data-bs-target="#telugu-pane" type="button" role="tab" aria-controls="telugu-pane" aria-selected="true">
+                Telugu
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-uppercase py-3" id="english-tab" data-bs-toggle="tab" data-bs-target="#english-pane" type="button" role="tab" aria-controls="english-pane" aria-selected="false">
+                English
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="songTabsContent">
+
+        <!-- TELUGU TAB PANE -->
+        <div class="tab-pane fade show active" id="telugu-pane" role="tabpanel" aria-labelledby="telugu-tab">
+
+            <!-- Sticky Glassmorphism Alphabetical Index -->
+            <div class="index-container d-flex flex-wrap justify-content-center mb-5 p-2 sticky-top">
+                <a th:each="entry : ${list}"
+                   th:href="'#telugu-letter-' + ${entry.key}"
+                   th:text="${entry.key}"
+                   class="index-link">A</a>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="col" th:each="entry : ${list}">
+                    <div class="card song-card h-100" th:id="'telugu-letter-' + ${entry.key}">
+                        <div class="card-header py-3">
+                            <h4 class="mb-0 text-center fw-bold" th:text="${entry.key}"></h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item py-3" th:each="song : ${entry.value}">
+                                <a class="song-link" th:href="@{/song/{id}(id=${song.id})}" th:text="${song.title}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENGLISH TAB PANE -->
+        <div class="tab-pane fade" id="english-pane" role="tabpanel" aria-labelledby="english-tab">
+
+            <!-- Sticky Glassmorphism Alphabetical Index -->
+            <div class="index-container d-flex flex-wrap justify-content-center mb-5 p-2 sticky-top">
+                <a th:each="entry : ${list2}"
+                   th:href="'#english-letter-' + ${entry.key}"
+                   th:text="${entry.key}"
+                   class="index-link">A</a>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="col" th:each="entry : ${list2}">
+                    <div class="card song-card english-card h-100" th:id="'english-letter-' + ${entry.key}">
+                        <div class="card-header py-3">
+                            <h4 class="mb-0 text-center fw-bold" th:text="${entry.key}"></h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item py-3" th:each="song : ${entry.value}">
+                                <a class="song-link" th:href="@{/song/{id}(id=${song.id})}" th:text="${song.transliteration}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Back to Top Button -->
+<button onclick="scrollToTop()" id="backToTopBtn" title="Go to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+    </svg>
+</button>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script>
+    const topButton = document.getElementById("backToTopBtn");
+
+    // Fades button in and out smoothly based on scroll position
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 250) {
+            topButton.classList.add("show");
+        } else {
+            topButton.classList.remove("show");
+        }
+    });
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+</body>
+</html>
